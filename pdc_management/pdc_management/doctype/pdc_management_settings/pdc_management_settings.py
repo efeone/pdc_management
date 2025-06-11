@@ -1,3 +1,4 @@
+
 import frappe
 from frappe.model.document import Document
 from frappe.utils import add_days, nowdate
@@ -19,13 +20,12 @@ def send_maturity_notifications():
         return
 
     template_doc = frappe.get_doc("Email Template", email_template_name)
-    subject = template_doc.subject or "PDC Due"
+    subject = template_doc.subject or "PDC Maturity Reminder"
     template = template_doc.response or ""
 
-    # Calculate target maturity date based on settings
     target_date = add_days(nowdate(), days_before)
 
-    # Fetch PDCs with maturity date on the target date
+    # Fetch PDCs due on the target date
     pdc_list = frappe.get_all(
         "Post Dated Cheque",
         filters={
@@ -38,18 +38,14 @@ def send_maturity_notifications():
     # Get internal user emails with the specified role
     internal_emails = []
     if role_to_notify:
-        internal_users = get_users_with_role(role_to_notify)
-        internal_emails = [
-            frappe.db.get_value("User", user, "email")
-            for user in internal_users
-            if frappe.db.get_value("User", user, "enabled") and frappe.db.get_value("User", user, "email")
-        ]
+        for user in get_users_with_role(role_to_notify):
+            email = frappe.db.get_value("User", user, "email")
+            enabled = frappe.db.get_value("User", user, "enabled")
+            if enabled and email:
+                internal_emails.append(email)
 
-    # Notify each PDC's contacts and internal users
     for pdc in pdc_list:
-        party_type = pdc.get("party_type")
-        party = pdc.get("party")
-        party_email = get_party_email(party_type, party)
+        party_email = get_party_email(pdc.party_type, pdc.party)
 
         recipients = list(set(internal_emails))
         if party_email:
@@ -60,19 +56,19 @@ def send_maturity_notifications():
 
         message = frappe.render_template(template, {
             "doc": pdc,
-            "party_name": party,
-            "pdc_name": pdc["name"],
-            "maturity_date": pdc["maturity_date"]
+            "party_name": pdc.party,
+            "pdc_name": pdc.name,
+            "maturity_date": pdc.maturity_date
         })
 
-        for email in recipients:
-            frappe.sendmail(
-                recipients=[email],
-                subject=subject,
-                message=message,
-                reference_doctype="Post Dated Cheque",
-                reference_name=pdc["name"]
-            )
+        # Send  email to all recipients
+        frappe.sendmail(
+            recipients=recipients,
+            subject=subject,
+            message=message,
+            reference_doctype="Post Dated Cheque",
+            reference_name=pdc.name
+        )
 
 
 def get_party_email(party_type, party):
@@ -88,4 +84,7 @@ def get_party_email(party_type, party):
         LIMIT 1
     """, (party_type, party), as_dict=True)
 
-    return result[0]["email_id"] if result else None
+    if result:
+        return result[0]["email_id"]
+
+    return frappe.db.get_value(party_type, party, "email_id")
