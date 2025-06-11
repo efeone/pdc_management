@@ -149,12 +149,11 @@ app_license = "mit"
 # ---------------
 
 scheduler_events = {
-	# "all": [
-	# 	"pdc_management.pdc_management.doctype.pdc_management_settings.pdc_management_settings.send_maturity_notifications"
-	# ],
-	"daily": [
+    "daily": [
 		"pdc_management.pdc_management.doctype.pdc_management_settings.pdc_management_settings.send_maturity_notifications"
 	],
+	# "all": [
+	# ],
 	# "hourly": [
 	# 	"pdc_management.tasks.hourly"
 	# ],

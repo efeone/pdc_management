@@ -11,6 +11,7 @@
  ],
  "fields": [
   {
+   "description": "(In Days)",
    "fieldname": "maturity_notification_before",
    "fieldtype": "Int",
    "label": "Maturity Notification Before"
@@ -32,7 +33,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-30 14:35:17.180538",
+ "modified": "2025-06-11 11:57:51.388741",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "PDC Management Settings",
