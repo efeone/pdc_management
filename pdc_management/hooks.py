@@ -148,23 +148,22 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"pdc_management.tasks.all"
-# 	],
-# 	"daily": [
-# 		"pdc_management.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"pdc_management.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"pdc_management.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"pdc_management.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+    "daily": [
+		"pdc_management.pdc_management.doctype.pdc_management_settings.pdc_management_settings.send_maturity_notifications"
+	],
+	# "all": [
+	# ],
+	# "hourly": [
+	# 	"pdc_management.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"pdc_management.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"pdc_management.tasks.monthly"
+	# ],
+}
 
 # Testing
 # -------

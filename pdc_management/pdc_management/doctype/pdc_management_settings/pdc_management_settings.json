@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-30 14:32:22.979470",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "maturity_notification_before",
+  "maturity_notification_template",
+  "notification_role"
+ ],
+ "fields": [
+  {
+   "description": "(In Days)",
+   "fieldname": "maturity_notification_before",
+   "fieldtype": "Int",
+   "label": "Maturity Notification Before"
+  },
+  {
+   "fieldname": "maturity_notification_template",
+   "fieldtype": "Link",
+   "label": "Maturity Notification Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "notification_role",
+   "fieldtype": "Link",
+   "label": "Notification Role",
+   "options": "Role"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-06-11 11:57:51.388741",
+ "modified_by": "Administrator",
+ "module": "PDC Management",
+ "name": "PDC Management Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
