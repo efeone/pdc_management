@@ -14,7 +14,11 @@
   "company",
   "column_break_qlye",
   "status",
+  "cleared_on",
   "bank_name",
+  "mode_of_payment",
+  "mode_of_payment_account",
+  "company_bank_account",
   "maturity_date",
   "amended_from",
   "party_details_section",
@@ -108,12 +112,16 @@
   {
    "fieldname": "party_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Party Type",
    "options": "DocType"
   },
   {
    "fieldname": "party",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Party",
    "options": "party_type"
   },
@@ -151,13 +159,39 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.status == \"Cleared\"",
+   "fieldname": "cleared_on",
+   "fieldtype": "Date",
+   "label": "Cleared On",
+   "mandatory_depends_on": "eval:doc.status == \"Cleared\""
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "company_bank_account",
+   "fieldtype": "Link",
+   "label": "Company Bank Account",
+   "options": "Bank Account"
+  },
+  {
+   "fieldname": "mode_of_payment_account",
+   "fieldtype": "Link",
+   "label": "Mode of Payment Account",
+   "options": "Account",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-03 12:00:30.396505",
+ "modified": "2026-08-04 15:30:34.361559",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "Post Dated Cheque",
