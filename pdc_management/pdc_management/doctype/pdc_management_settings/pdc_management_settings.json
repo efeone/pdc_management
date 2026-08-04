@@ -5,35 +5,36 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "maturity_notification_before",
-  "maturity_notification_template",
-  "notification_role"
+  "default_mode_of_payment",
+  "default_mode_of_payment_account",
+  "deafult_bank_account"
  ],
  "fields": [
   {
-   "description": "(In Days)",
-   "fieldname": "maturity_notification_before",
-   "fieldtype": "Int",
-   "label": "Maturity Notification Before"
+   "fieldname": "default_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Default Mode of Payment",
+   "options": "Mode of Payment"
   },
   {
-   "fieldname": "maturity_notification_template",
+   "fieldname": "default_mode_of_payment_account",
    "fieldtype": "Link",
-   "label": "Maturity Notification Template",
-   "options": "Email Template"
+   "label": "Default Mode of Payment Account ",
+   "options": "Account"
   },
   {
-   "fieldname": "notification_role",
+   "description": "This bank account will be used to Pay/Receive payments for Cheque",
+   "fieldname": "deafult_bank_account",
    "fieldtype": "Link",
-   "label": "Notification Role",
-   "options": "Role"
+   "label": "Deafult Bank Account",
+   "options": "Bank Account"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-11 11:57:51.388741",
+ "modified": "2026-08-03 17:56:07.353222",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "PDC Management Settings",
@@ -50,6 +51,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
