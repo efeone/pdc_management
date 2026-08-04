@@ -14,3 +14,14 @@ class PostDatedCheque(Document):
 
 		if not self.cleared_on:
 			frappe.throw("Please enter the Cleared On date before submitting the Post Dated Cheque.")
+
+@frappe.whitelist()
+def get_mode_of_payment_account(mode_of_payment, company):
+	return frappe.db.get_value(
+		"Mode of Payment Account",
+		{
+			"parent": mode_of_payment,
+			"company": company
+		},
+		"default_account"
+	)

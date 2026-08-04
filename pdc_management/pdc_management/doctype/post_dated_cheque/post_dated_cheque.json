@@ -17,6 +17,7 @@
   "cleared_on",
   "bank_name",
   "mode_of_payment",
+  "mode_of_payment_account",
   "company_bank_account",
   "maturity_date",
   "amended_from",
@@ -177,13 +178,20 @@
    "fieldtype": "Link",
    "label": "Company Bank Account",
    "options": "Bank Account"
+  },
+  {
+   "fieldname": "mode_of_payment_account",
+   "fieldtype": "Link",
+   "label": "Mode of Payment Account",
+   "options": "Account",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-04 09:57:24.606149",
+ "modified": "2026-08-04 15:30:34.361559",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "Post Dated Cheque",

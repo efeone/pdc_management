@@ -16,6 +16,12 @@ frappe.ui.form.on("Post Dated Cheque", {
 	},
     party(frm) {
 		clear_payments(frm);
+	},
+    mode_of_payment(frm) {
+		set_mode_of_payment_account(frm);
+	},
+	company(frm) {
+		set_mode_of_payment_account(frm);
 	}
 });
 
@@ -115,3 +121,22 @@ function get_outstanding_amount(frm, cdt, cdn) {
 	});
 }
 
+/**
+ * Function to set mode of payment account from mode of payment based on selected company
+ */
+function set_mode_of_payment_account(frm) {
+	if (!frm.doc.mode_of_payment || !frm.doc.company) {
+		frm.set_value("mode_of_payment_account", "");
+		return;
+	}
+	frappe.call({
+		method: "pdc_management.pdc_management.doctype.post_dated_cheque.post_dated_cheque.get_mode_of_payment_account",
+		args: {
+			mode_of_payment: frm.doc.mode_of_payment,
+			company: frm.doc.company
+		},
+		callback: function(r) {
+			frm.set_value("mode_of_payment_account", r.message || "");
+		}
+	});
+}
