@@ -8,7 +8,23 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["erpnext"]
+
+doctype_js = {
+	"Sales Invoice": [
+		"pdc_management/custom_scripts/post_dated_cheque_dialog.js",
+		"pdc_management/custom_scripts/sales_invoice/sales_invoice.js",
+	],
+	"Purchase Invoice": [
+		"pdc_management/custom_scripts/post_dated_cheque_dialog.js",
+		"pdc_management/custom_scripts/purchase_invoice/purchase_invoice.js",
+	],
+}
+
+override_doctype_dashboards = {
+	"Sales Invoice": "pdc_management.pdc_management.custom_scripts.sales_invoice.sales_invoice_dashboard.get_data",
+	"Purchase Invoice": "pdc_management.pdc_management.custom_scripts.purchase_invoice.purchase_invoice_dashboard.get_data",
+}
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [

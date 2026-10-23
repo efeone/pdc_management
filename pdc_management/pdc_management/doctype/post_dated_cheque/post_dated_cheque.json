@@ -26,6 +26,7 @@
   "column_break_cmvm",
   "party",
   "section_break_himj",
+  "fetch_invoices",
   "payment_reference",
   "references_section",
   "payment_entry"
@@ -52,7 +53,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Payment Type",
-   "options": "Pay\nReceive"
+   "options": "Pay\nReceive",
+   "reqd": 1
   },
   {
    "fieldname": "cheque_number",
@@ -75,7 +77,7 @@
    "in_list_view": 1,
    "label": "Amount",
    "non_negative": 1,
-   "options": "Co",
+   "options": "company:company_currency",
    "reqd": 1
   },
   {
@@ -84,8 +86,9 @@
   },
   {
    "fieldname": "bank_name",
-   "fieldtype": "Data",
-   "label": "Bank Name"
+   "fieldtype": "Link",
+   "label": "Bank",
+   "options": "Bank"
   },
   {
    "fieldname": "maturity_date",
@@ -115,7 +118,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Party Type",
-   "options": "DocType"
+   "options": "DocType",
+   "read_only": 1
   },
   {
    "fieldname": "party",
@@ -134,12 +138,20 @@
    "fieldname": "payment_entry",
    "fieldtype": "Link",
    "label": "Payment Entry",
+   "no_copy": 1,
    "options": "Payment Entry",
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.party_type && doc.party",
    "fieldname": "section_break_himj",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.docstatus==0 && doc.party_type && doc.party",
+   "fieldname": "fetch_invoices",
+   "fieldtype": "Button",
+   "label": "Fetch Invoices"
   },
   {
    "fieldname": "payment_reference",
@@ -191,7 +203,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-04 15:30:34.361559",
+ "modified": "2026-10-22 18:30:00.000000",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "Post Dated Cheque",
