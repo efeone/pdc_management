@@ -98,11 +98,15 @@ frappe.ui.form.on("Cheque", {
 
 	mode_of_payment(frm) {
 		if (!frm.doc.mode_of_payment || !frm.doc.company) return;
+		// Mode of Payment Account is a child table: frappe.client.get_value checks permission
+		// against the parent doctype, which has to be named in the fifth argument.
 		frappe.db
 			.get_value(
 				"Mode of Payment Account",
 				{ parent: frm.doc.mode_of_payment, company: frm.doc.company },
-				"default_account"
+				"default_account",
+				null,
+				"Mode of Payment"
 			)
 			.then(({ message }) => {
 				if (message?.default_account && !frm.doc.bank_account) {

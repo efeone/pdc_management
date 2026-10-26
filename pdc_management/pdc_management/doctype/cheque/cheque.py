@@ -701,7 +701,9 @@ def get_outstanding_invoices(company: str, party_type: str, party: str, cheque_t
 @frappe.whitelist()
 def make_cheque_from_invoice(source_name: str, args: str | dict | None = None):
 	"""A draft cheque settling what is still open on the invoice. `args.source_doctype` names the invoice type."""
-	source_doctype = frappe.parse_json(args or {}).get("source_doctype")
+	# `make_mapped_doc` calls this with source_name alone and leaves args on frappe.flags.
+	args = frappe.parse_json(args) if args else frappe.flags.args
+	source_doctype = (args or {}).get("source_doctype")
 	if source_doctype not in PARTY_FIELD:
 		frappe.throw(_("Cheques can be created only from Sales or Purchase Invoices."))
 	invoice = frappe.get_doc(source_doctype, source_name)
