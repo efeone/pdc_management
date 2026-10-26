@@ -44,6 +44,13 @@ frappe.ui.form.on("Cheque", {
 
 	onload(frm) {
 		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
+		if (frm.is_new() && !frm.doc.mode_of_payment) {
+			// Setting it here rather than on the server shows the mode, and the bank account it
+			// brings with it, while the cheque is still being filled in.
+			frappe.db
+				.get_single_value("Cheque Settings", "default_mode_of_payment")
+				.then((mode) => mode && frm.set_value("mode_of_payment", mode));
+		}
 	},
 
 	refresh(frm) {

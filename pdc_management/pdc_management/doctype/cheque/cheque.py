@@ -86,6 +86,26 @@ class Cheque(Document):
 		if self.replacement_of:
 			self.restore_original()
 
+	def on_trash(self):
+		"""Release the entries the cheque posted, so its own work does not block the delete.
+
+		They stay in the books as cancelled vouchers naming the cheque in their remark: a
+		cancelled entry still owns its GL rows, so deleting it is ERPNext's call, not ours.
+		Every entry is cancelled by the time a cheque can be deleted (on_cancel and
+		undo_last_step see to that); a submitted one means the books still carry it.
+		"""
+		submitted = frappe.get_all(
+			"Journal Entry", filters={"cheque": self.name, "docstatus": 1}, pluck="name"
+		)
+		if submitted:
+			frappe.throw(
+				_("Cancel the cheque first: {0} is still submitted.").format(
+					", ".join(get_link_to_form("Journal Entry", name) for name in submitted)
+				),
+				title=_("Cannot Delete"),
+			)
+		frappe.db.set_value("Journal Entry", {"cheque": self.name}, "cheque", None, update_modified=False)
+
 	# ---------------------------------------------------------------- validation
 
 	def set_missing_values(self):
@@ -123,6 +143,8 @@ class Cheque(Document):
 				)
 			)
 
+		if self.is_new() and not self.mode_of_payment:
+			self.mode_of_payment = get_settings().default_mode_of_payment
 		if not self.bank_account and self.mode_of_payment:
 			self.bank_account = self.default_bank_account()
 		self.set_dimension_defaults()

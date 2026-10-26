@@ -17,6 +17,8 @@ CUSTOMER = "_Test Cheque Customer"
 USD_CUSTOMER = "_Test Cheque USD Customer"
 SUPPLIER = "_Test Cheque Supplier"
 ITEM = "_Test Cheque Service"
+MODE_OF_PAYMENT = "_Test Cheque Mode"
+ALT_MODE_OF_PAYMENT = "_Test Cheque Mode 2"
 
 
 def before_tests():
@@ -191,6 +193,12 @@ def make_masters():
 			item.gst_hsn_code = "998311"
 		# Masters get fixed names even on sites that name them by series.
 		item.insert(set_name=ITEM)
+	for mode in (MODE_OF_PAYMENT, ALT_MODE_OF_PAYMENT):
+		# No Mode of Payment Account row: nothing for the cheque to take a bank account from.
+		if not frappe.db.exists("Mode of Payment", mode):
+			frappe.get_doc(
+				{"doctype": "Mode of Payment", "mode_of_payment": mode, "type": "Bank"}
+			).insert(set_name=mode)
 	if not frappe.db.get_value("Currency Exchange", {"from_currency": "USD", "to_currency": "INR"}):
 		frappe.get_doc(
 			{

@@ -11,8 +11,10 @@ from pdc_management.pdc_management.doctype.cheque.cheque import (
 	make_replacement,
 )
 from pdc_management.tests.utils import (
+	ALT_MODE_OF_PAYMENT,
 	COMPANY,
 	CUSTOMER,
+	MODE_OF_PAYMENT,
 	SUPPLIER,
 	USD_CUSTOMER,
 	account,
@@ -233,6 +235,24 @@ class TestChequeRules(ChequeTestCase):
 		with self.assertRaisesRegex(frappe.ValidationError, "cannot be of type"):
 			settings.save()
 
+	def test_default_mode_of_payment_fills_a_new_cheque(self):
+		configure_settings(default_mode_of_payment=MODE_OF_PAYMENT)
+		self.assertEqual(make_cheque(amount=100).mode_of_payment, MODE_OF_PAYMENT)
+
+	def test_default_mode_of_payment_does_not_override_a_chosen_one(self):
+		configure_settings(default_mode_of_payment=MODE_OF_PAYMENT)
+		cheque = make_cheque(amount=100, mode_of_payment=ALT_MODE_OF_PAYMENT)
+		self.assertEqual(cheque.mode_of_payment, ALT_MODE_OF_PAYMENT)
+
+	def test_company_with_every_account_set_needs_no_creation(self):
+		"""What hides the Create Missing Accounts button."""
+		settings = frappe.get_single("Cheque Settings")
+		self.assertNotIn(COMPANY, settings.companies_missing_accounts())
+
+		row = next(row for row in settings.company_accounts if row.company == COMPANY)
+		row.bank_charges_account = None
+		self.assertIn(COMPANY, settings.companies_missing_accounts())
+
 
 class TestCancelAndUndo(ChequeTestCase):
 	def test_cancel_in_hand_cheque_reverses_receipt(self):
@@ -243,6 +263,23 @@ class TestCancelAndUndo(ChequeTestCase):
 		self.assertEqual(cheque.status, "Cancelled")
 		self.assertEqual(frappe.db.get_value("Journal Entry", cheque.journal_entry, "docstatus"), 2)
 		self.assertEqual(outstanding(invoice), 250)
+
+	def test_deleting_a_cancelled_cheque_releases_its_entries(self):
+		cheque = make_cheque(amount=100)
+		cheque.deposit(base_date(), BANK)
+		cheque.clear(base_date())
+		clearance = cheque.events[-1].journal_entry
+		receipt = cheque.journal_entry
+
+		cheque.undo_last_step()
+		cheque.undo_last_step()
+		cheque.cancel()
+		cheque.delete()
+
+		self.assertFalse(frappe.db.exists("Cheque", cheque.name))
+		for entry in (receipt, clearance):
+			self.assertEqual(frappe.db.get_value("Journal Entry", entry, "docstatus"), 2)
+			self.assertFalse(frappe.db.get_value("Journal Entry", entry, "cheque"))
 
 	def test_cancel_blocked_after_deposit(self):
 		cheque = make_cheque(amount=100)

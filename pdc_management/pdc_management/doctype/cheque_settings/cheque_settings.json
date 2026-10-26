@@ -12,6 +12,7 @@
   "block_duplicate_cheque",
   "column_break_rules",
   "cheque_validity_months",
+  "default_mode_of_payment",
   "reminders_section",
   "send_daily_digest",
   "digest_days_ahead",
@@ -25,7 +26,7 @@
    "label": "Accounts"
   },
   {
-   "description": "One row per company. Use <b>Create Missing Accounts</b> to add the holding accounts to a company's chart of accounts.",
+   "description": "One row per company. Add the company, then use <b>Create Missing Accounts</b> to add any holding accounts it is still missing to that company's chart of accounts.",
    "fieldname": "company_accounts",
    "fieldtype": "Table",
    "label": "Company Accounts",
@@ -68,6 +69,13 @@
    "non_negative": 1
   },
   {
+   "description": "Pre-selected on a new cheque. The bank account is taken from this mode of payment.",
+   "fieldname": "default_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Default Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
    "fieldname": "reminders_section",
    "fieldtype": "Section Break",
    "label": "Reminders"
@@ -102,7 +110,7 @@
  ],
  "issingle": 1,
  "links": [],
- "modified": "2026-10-06 10:00:00.000000",
+ "modified": "2026-10-26 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "PDC Management",
  "name": "Cheque Settings",

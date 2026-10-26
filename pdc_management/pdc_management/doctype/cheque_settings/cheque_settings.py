@@ -48,6 +48,19 @@ class ChequeSettings(Document):
 		frappe.clear_document_cache("Cheque Settings", "Cheque Settings")
 
 	@frappe.whitelist()
+	def companies_missing_accounts(self) -> list[str]:
+		"""Listed companies with an account still blank: what Create Missing Accounts has to do.
+
+		Only what the table names. A company nobody has added is not this form's business,
+		and counting every company on the site would leave the button up for good.
+		"""
+		return [
+			row.company
+			for row in self.company_accounts
+			if row.company and not all(row.get(fieldname) for fieldname, *_rest in NEW_ACCOUNTS)
+		]
+
+	@frappe.whitelist()
 	def create_missing_accounts(self, company: str):
 		"""Add the holding and charges accounts to the company's chart and fill the row."""
 		frappe.has_permission("Account", "create", throw=True)
